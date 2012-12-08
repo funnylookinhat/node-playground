@@ -1,0 +1,31 @@
+<a href="" target="_BLANK">NEW</a><br>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+$(function() {
+  var socket = io.connect('http://localhost');
+  socket.on('getResponse', function (data) {
+    $('#status-output').html(data.status);
+  });
+
+  $('#get-status').click(function() {
+  	socket.emit('get');
+  });
+  $('#set-status').click(function() {
+  	socket.emit('set',{status:$('#status-input').val()});
+  });
+  function timeUpdate() {
+  	var d = new Date();
+  	socket.emit('set',{status:d.getMilliseconds()});
+  }
+  setInterval(function() { timeUpdate(); },50);
+
+});
+</script>
+
+Status: ( <a href="#" id="get-status">Update</a> )<br>
+<div id="status-output">
+</div>
+<br>
+<input type="text" id="status-input"><a href="#" id="set-status">Set</a>
